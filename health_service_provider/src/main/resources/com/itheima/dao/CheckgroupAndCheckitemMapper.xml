@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        " http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itheima.dao.CheckgroupAndCheckitemMapper">
+
+    <select id="selectCountByCheckitemId" parameterType="integer" resultType="long">
+        SELECT COUNT(0) FROM t_checkgroup_checkitem WHERE checkitem_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <insert id="add" parameterType="map">
+        insert into
+           t_checkgroup_checkitem(checkgroup_id,checkitem_id)
+        values (#{checkgroupId},#{checkitemId})
+    </insert>
+
+    <select id="findCheckItemIdsByCheckGroupId" parameterType="int" resultType="int">
+        SELECT checkitem_id
+        FROM t_checkgroup_checkitem
+        WHERE checkgroup_id = #{checkGroupId}
+    </select>
+
+    <delete id="deleteByCheckGroupId" parameterType="int">
+        DELETE
+        FROM t_checkgroup_checkitem
+        WHERE checkgroup_id = #{id}
+    </delete>
+</mapper>
