@@ -15,7 +15,7 @@ import java.util.List;
  * @Date  2019年12月18日 20:09
  * @Version 1.0.0
 */
-@Service
+@Service(interfaceClass = CheckgroupAndCheckitemService.class)
 @Transactional
 public class CheckgroupAndCheckitemServiceImpl implements CheckgroupAndCheckitemService {
 
