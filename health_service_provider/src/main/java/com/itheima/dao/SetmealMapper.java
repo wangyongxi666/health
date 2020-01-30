@@ -26,6 +26,8 @@ public interface SetmealMapper {
 
   List<Setmeal> findAll();
 
+  List<Map<String, Object>> findSetmealCount();
+
 
 
 

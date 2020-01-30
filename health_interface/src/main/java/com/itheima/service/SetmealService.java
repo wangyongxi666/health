@@ -6,6 +6,7 @@ import com.itheima.entity.Result;
 import com.itheima.pojo.Setmeal;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName SetmealService
@@ -40,6 +41,15 @@ public interface SetmealService {
    * 根据id获取检查套餐
   **/
   Setmeal findById(int id);
+
+  /**
+   * @Author YongXi.Wang
+   * @Description 查询套餐占比
+   * @Date 2020/1/30 21:09
+   * @Param  
+   * @return 
+  **/
+  List<Map<String,Object>> findSetmealCount();
 
 
 }

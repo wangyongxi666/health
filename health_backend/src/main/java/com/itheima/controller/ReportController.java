@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.Result;
 import com.itheima.service.MemberService;
+import com.itheima.service.SetmealService;
 import com.itheima.utils.DateUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,16 @@ public class ReportController {
   @Reference
   private MemberService memberService;
 
+  @Reference
+  private SetmealService setmealService;
+
+  /**
+   * @Author YongXi.Wang
+   * @Description 统计每月会员注册数量报表
+   * @Date 2020/1/30 20:06
+   * @Param [] 
+   * @return com.itheima.entity.Result
+  **/
   @GetMapping("/getMemberReport")
   public Result getMemberReport() throws Exception{
 
@@ -53,5 +64,38 @@ public class ReportController {
 
     return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS,map);
   }
+  
+  /**
+   * @Author YongXi.Wang
+   * @Description 统计套餐占比报表
+   * @Date 2020/1/30 20:06
+   * @Param  
+   * @return 
+  **/
+  @GetMapping("/getSetmealReport")
+  public Result getSetmealReport(){
 
+    try {
+      //创建封装返回类
+      Map<String,List> map = new HashMap();
+
+      //查询检查套餐占比
+      List<Map<String,Object>> setmealCountList = setmealService.findSetmealCount();
+
+      List<String> setmealNameList = new ArrayList<>();
+
+      //取出name值
+      for (Map<String, Object> setmealCountMap : setmealCountList) {
+        setmealNameList.add((String) setmealCountMap.get("name"));
+      }
+
+      map.put("setmealCount",setmealCountList);
+      map.put("setmealNames",setmealNameList);
+
+      return new Result(true,MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS,map);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Result(false,MessageConstant.GET_SETMEAL_COUNT_REPORT_FAIL);
+    }
+  }
 }
