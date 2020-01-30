@@ -8,6 +8,9 @@ import com.itheima.utils.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @ClassName MemberServiceImple
  * @Description 会员业务接口实现类
@@ -44,5 +47,16 @@ public class MemberServiceImple implements MemberService{
       memberMapper.add(member);
     }
 
+  }
+
+  @Override
+  public List<Integer> getMemeberCountByMonth(List<String> months) {
+    List<Integer> counts = new ArrayList<>();
+    for (String month : months) {
+      month = month + ".31";
+      Integer count = memberMapper.getMemeberCountBeforeMonthMax(month);
+      counts.add(count);
+    }
+    return counts;
   }
 }
