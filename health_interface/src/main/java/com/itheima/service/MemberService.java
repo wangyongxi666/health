@@ -31,4 +31,5 @@ public interface MemberService {
    * @return java.util.List<java.lang.String>
   **/
   List<Integer> getMemeberCountByMonth(List<String> months);
+
 }

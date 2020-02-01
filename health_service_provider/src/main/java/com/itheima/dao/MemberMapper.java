@@ -27,4 +27,31 @@ public interface MemberMapper {
    * @return java.lang.Integer
   **/
   Integer getMemeberCountBeforeMonthMax(String month);
+
+  /**
+   * @Author YongXi.Wang
+   * @Description 根据日期查询当天新增会员数量
+   * @Date 2020/1/31 13:17
+   * @Param [today]
+   * @return java.lang.Integer
+   **/
+  Integer findMemberCountByDate(String today);
+
+  /**
+   * @Author YongXi.Wang
+   * @Description 查询总会员数量
+   * @Date 2020/1/31 13:17
+   * @Param [today]
+   * @return java.lang.Integer
+   **/
+  Integer findMemberTotalCount();
+
+  /**
+   * @Author YongXi.Wang
+   * @Description 获取给出时间之前的数据
+   * @Date 2020/1/31 16:08
+   * @Param [monday] 
+   * @return java.lang.Integer
+  **/
+  Integer findMemberBeforeDate(String monday);
 }
