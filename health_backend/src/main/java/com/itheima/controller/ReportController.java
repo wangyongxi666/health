@@ -7,6 +7,11 @@ import com.itheima.service.MemberService;
 import com.itheima.service.ReportService;
 import com.itheima.service.SetmealService;
 import com.itheima.utils.DateUtils;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -142,7 +147,7 @@ public class ReportController {
 
   /**
    * @Author YongXi.Wang
-   * @Description 导出运营统计报表
+   * @Description 导出运营统计报表 Excel
    * @Date 2020/1/30 20:06
    * @Param
    * @return
@@ -225,6 +230,65 @@ public class ReportController {
       xssfWorkbook.write(out);
 
       out.flush();
+
+      return new Result(true,MessageConstant.GET_BUSINESS_REPORT_SUCCESS);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Result(false,MessageConstant.GET_BUSINESS_REPORT_FAIL);
+    }finally {
+      if(out != null){
+        try {
+          out.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  /**
+   * @Author YongXi.Wang
+   * @Description 导出运营统计报表 PDF文件
+   * @Date 2020/1/30 20:06
+   * @Param
+   * @return
+   **/
+  @GetMapping("/exportBusinessReport4PDF")
+  public Result exportBusinessReport4PDF(HttpServletRequest request, HttpServletResponse response){
+
+    ServletOutputStream out = null;
+
+    try {
+
+      //远程调用报表服务获取报表数据
+      Map<String, Object> result = reportService.getBusinessReportData();
+
+      //取出运营统计数据
+      List<Map> hotSetmeal = (List<Map>) result.get("hotSetmeal");
+
+      //动态获取模板文件绝对磁盘路径
+      String jrxmlPath =
+              request.getSession().getServletContext().getRealPath("template") + File.separator + "health_business3.jrxml";
+      String jasperPath =
+              request.getSession().getServletContext().getRealPath("template") + File.separator + "health_business3.jasper";
+
+      //编译模板
+      JasperCompileManager.compileReportToFile(jrxmlPath, jasperPath);
+
+      //填充数据---使用JavaBean数据源方式填充
+      JasperPrint jasperPrint =
+              JasperFillManager.fillReport(jasperPath,result,
+                      new JRBeanCollectionDataSource(hotSetmeal));
+
+      //通过输出流进行文件下载
+      out = response.getOutputStream();
+      //指定格式
+      response.setContentType("application/pdf");
+      response.setHeader("content-Disposition", "attachment;filename=report.pdf");
+
+      //输出文件
+      JasperExportManager.exportReportToPdfStream(jasperPrint,out);
 
       return new Result(true,MessageConstant.GET_BUSINESS_REPORT_SUCCESS);
 
